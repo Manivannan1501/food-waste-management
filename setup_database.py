@@ -1,19 +1,23 @@
-
-import sqlite3
 import pandas as pd
+import sqlite3
 
+# Read CSV files (flat structure, no "data/" folder)
+providers = pd.read_csv("providers_data.csv")
+receivers = pd.read_csv("receivers_data.csv")
+food_listings = pd.read_csv("food_listings_data.csv")
+claims = pd.read_csv("claims_data.csv")
+
+# Create SQLite DB and connection
 conn = sqlite3.connect("food.db")
+cursor = conn.cursor()
 
-providers = pd.read_csv("data/providers_data.csv")
-receivers = pd.read_csv("data/receivers_data.csv")
-food = pd.read_csv("data/food_listings_data.csv")
-claims = pd.read_csv("data/claims_data.csv")
-
+# Save data to tables
 providers.to_sql("providers", conn, if_exists="replace", index=False)
 receivers.to_sql("receivers", conn, if_exists="replace", index=False)
-food.to_sql("food_listings", conn, if_exists="replace", index=False)
+food_listings.to_sql("food_listings", conn, if_exists="replace", index=False)
 claims.to_sql("claims", conn, if_exists="replace", index=False)
 
-conn.commit()
+# Close connection
 conn.close()
-print("Database setup completed.")
+
+print("Database setup complete!")
